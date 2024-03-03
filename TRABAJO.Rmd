@@ -1,0 +1,29 @@
+---
+title: "Covid"
+author: "Alexis Cavero Arocas"
+date: "2024-03-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+fichero <- read.csv('data/owid-covid-data.csv')
+```
+
+
+```{r}
+
+library(ggplot2)
+
+
+dataset_filtrado <- fichero[fichero$iso_code == 'CAN']
+ggplot(fichero, aes( x = date, y = total_cases)) + geom_line 
+
+
+
+
+```
+
