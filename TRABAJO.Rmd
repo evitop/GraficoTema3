@@ -9,18 +9,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-fichero <- read.csv('data/owid-covid-data.csv')
-```
+
 
 
 ```{r}
 
+library(dplyr)
+library(zoo)
 library(ggplot2)
+library(readr)
+library(plotly)# Asegúrate de cargar readr para leer el CSV
 
+# Leer los datos
+covid_data <- read_csv("data/owid-covid-data.csv")
 
-dataset_filtrado <- fichero[fichero$iso_code == 'CAN']
-ggplot(fichero, aes( x = date, y = total_cases)) + geom_line 
+# Procesar los datos
+filtered_data <- covid_data %>%
+  filter(location %in% c("United States", "Italy", "France", "Germany", "Canada", "Japan", "United Kingdom", "Spain")) %>%
+  group_by(location) %>%
+  mutate(deaths_per_million_7day_avg = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  # Asegúrate de que el nombre de la columna sea correcto
+
+# Crear el gráfico
+plot <- ggplot(filtered_data, aes(x = date, y = deaths_per_million_7day_avg, color = location, group = location)) +
+  geom_line(aes(size = location == 'Spain')) + scale_size_manual(values = c("TRUE" = 1, "FALSE" = 0.5)) + 
+  scale_color_manual(values = c("United States" = "blue", "Italy" = "green", "France" = "purple", 
+                                "Germany" = "orange", "Canada" = "brown", "Japan" = "pink", 
+                                "United Kingdom" = "grey", "Spain" = "red")) +
+  theme_minimal() +
+  labs(title = "Daily new confirmed COVID-19 deaths per million people (7-day rolling average)", 
+       subtitle = "For some countries the number of confirmed deaths is much lower than the true number of deaths.",
+       caption = "Source: Our World in Data") +
+  theme(legend.title = element_blank())
+
+plot
 
 
 
