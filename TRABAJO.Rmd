@@ -1,19 +1,4 @@
----
-title: "Covid"
-author: "Alexis Cavero Arocas, Eric Villaescusa Topper, Alberto Dalmau Garcia, Marcos Baudson Rios"
-date: "2024-03-03"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-
-
-
-```{r}
-#Cargamos las librerias necesarias
+# Primero necesitamos cargar unas cuantas bibliotecas.
 library(dplyr)
 library(zoo)
 library(ggplot2)
@@ -21,18 +6,21 @@ library(readr)
 library(plotly)
 library(htmlwidgets)
 
-# Leer los datos
+# Ahora vamos a leer los datos del COVID-19 desde un archivo CSV.
 datos <- read_csv("data/owid-covid-data.csv")
 
-# Procesar los datos
+# Vamos a filtrar los datos para quedarnos solo con los países que nos interesan.
+# Además, calculamos la media móvil de las muertes por millón en los últimos 7 días.
 datos_filtrados <- datos %>%
   filter(location %in% c("United States", "Italy", "France", "Germany", "Canada", "Japan", "United Kingdom", "Spain")) %>%
   group_by(location) %>%
   mutate(muertes_por_millon_7dias_media = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  
 
+# Aquí tenemos unas fechas específicas que vamos a usar más adelante.
 fechas_especificas <- as.Date(c("2020-02-13", "2020-08-08", "2021-02-24", "2021-08-08", "2022-02-28", "2022-08-08", "2023-02-28", "2023-08-18", "2024-02-10"))
 
-# Crear el gráfico
+# Vamos a hacer un gráfico de líneas con los datos que hemos preparado.
+# Personalizamos los colores y el tamaño de las líneas.
 grafico <- ggplot(datos_filtrados, aes(x = date, y = muertes_por_millon_7dias_media, color = location, group = location)) +
   geom_line(aes(size = location == 'Spain')) + scale_size_manual(values = c("TRUE" = 1, "FALSE" = 0.5)) + 
   scale_color_manual(values = c("United States" = "purple", "Italy" = "blue", "France" = "orange", 
@@ -51,16 +39,14 @@ grafico <- ggplot(datos_filtrados, aes(x = date, y = muertes_por_millon_7dias_me
         plot.subtitle = element_text(size = 18), # Aumentar tamaño y cambiar fuente
         plot.caption = element_text(hjust = 0, vjust = 0, size = 12, face = "bold", color = "black"))
 
-#Modificamos la leyenda
+# Aquí modificamos la leyenda para que no muestre el tamaño.
 grafico <- grafico + guides(size = FALSE)
 
-#Creamos el grafico interactivo mediante ggplotly
+# Ahora vamos a hacer que el gráfico sea interactivo con ggplotly.
 grafico_interactivo <- ggplotly(grafico)
 
-#Guardamos el gráfico en PDF
+# Por último, guardamos el gráfico en un archivo PDF.
 ggsave("GraficoTema3.pdf", plot = grafico, width = 16, height = 8, dpi = 1000)
 
-#Guardamos el gráfico en HTML
+# Y también lo guardamos en un archivo HTML.
 saveWidget(grafico_interactivo, file = "GraficoTema3.html")
-```
-
