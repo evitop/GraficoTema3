@@ -35,11 +35,12 @@ plot <- ggplot(filtered_data, aes(x = date, y = deaths_per_million_7day_avg, col
   scale_color_manual(values = c("United States" = "purple", "Italy" = "blue", "France" = "orange", 
                                 "Germany" = "green", "Canada" = "brown", "Japan" = "grey", 
                                 "United Kingdom" = "pink", "Spain" = "red")) +
-  theme_minimal() +
+   scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") + theme_minimal() +
   labs(title = "Daily new confirmed COVID-19 deaths per million people (7-day rolling average)", 
        subtitle = "For some countries the number of confirmed deaths is much lower than the true number of deaths.",
        caption = "Source: Our World in Data", x = "", y = "") +
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank(),
+        axis.text.x = element_text(angle = 0, hjust = 0.5))
 
 #Modificamos la leyenda
 plot <- plot + guides(size = FALSE)
