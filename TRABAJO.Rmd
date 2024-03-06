@@ -1,6 +1,6 @@
 ---
 title: "Covid"
-author: "Alexis Cavero Arocas"
+author: "Alexis Cavero Arocas, Eric Villaescusa Topper, Alberto Dalmau Garcia, Marcos Baudson Rios"
 date: "2024-03-03"
 output: html_document
 ---
@@ -43,6 +43,7 @@ plot <- ggplot(filtered_data, aes(x = date, y = deaths_per_million_7day_avg, col
 
 plot
 
+ggplotly(plot)
 
 
 
