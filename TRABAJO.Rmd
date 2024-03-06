@@ -13,12 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-
+#Cargamos las librerias necesarias
 library(dplyr)
 library(zoo)
 library(ggplot2)
 library(readr)
-library(plotly)# Asegúrate de cargar readr para leer el CSV
+library(plotly)
 
 # Leer los datos
 datos <- read_csv("data/owid-covid-data.csv")
@@ -27,7 +27,7 @@ datos <- read_csv("data/owid-covid-data.csv")
 datos_filtrados <- datos %>%
   filter(location %in% c("United States", "Italy", "France", "Germany", "Canada", "Japan", "United Kingdom", "Spain")) %>%
   group_by(location) %>%
-  mutate(muertes_por_millon_7dias_media = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  # Asegúrate de que el nombre de la columna sea correcto
+  mutate(muertes_por_millon_7dias_media = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  
 
 fechas_especificas <- as.Date(c("2020-02-13", "2020-08-08", "2021-02-24", "2021-08-08", "2022-02-28", "2022-08-08", "2023-02-28", "2023-08-18", "2024-02-10"))
 
