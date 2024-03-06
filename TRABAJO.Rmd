@@ -19,6 +19,7 @@ library(zoo)
 library(ggplot2)
 library(readr)
 library(plotly)
+library(htmlwidgets)
 
 # Leer los datos
 datos <- read_csv("data/owid-covid-data.csv")
@@ -53,11 +54,13 @@ grafico <- ggplot(datos_filtrados, aes(x = date, y = muertes_por_millon_7dias_me
 #Modificamos la leyenda
 grafico <- grafico + guides(size = FALSE)
 
-ggplotly(grafico)
+#Creamos el grafico interactivo mediante ggplotly
+grafico_interactivo <- ggplotly(grafico)
 
 #Guardamos el gráfico en PDF
 ggsave("GraficoTema3.pdf", plot = grafico, width = 16, height = 8, dpi = 1000)
 
-
+#Guardamos el gráfico en HTML
+saveWidget(grafico_interactivo, file = "GraficoTema3.html")
 ```
 
