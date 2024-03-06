@@ -21,18 +21,18 @@ library(readr)
 library(plotly)# Asegúrate de cargar readr para leer el CSV
 
 # Leer los datos
-covid_data <- read_csv("data/owid-covid-data.csv")
+datos <- read_csv("data/owid-covid-data.csv")
 
 # Procesar los datos
-filtered_data <- covid_data %>%
+datos_filtrados <- datos %>%
   filter(location %in% c("United States", "Italy", "France", "Germany", "Canada", "Japan", "United Kingdom", "Spain")) %>%
   group_by(location) %>%
-  mutate(deaths_per_million_7day_avg = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  # Asegúrate de que el nombre de la columna sea correcto
+  mutate(muertes_por_millon_7dias_media = rollmean(new_deaths_smoothed_per_million, 7, fill = NA, align = 'right'))  # Asegúrate de que el nombre de la columna sea correcto
 
 fechas_especificas <- as.Date(c("2020-02-13", "2020-08-08", "2021-02-24", "2021-08-08", "2022-02-28", "2022-08-08", "2023-02-28", "2023-08-18", "2024-02-10"))
 
 # Crear el gráfico
-plot <- ggplot(filtered_data, aes(x = date, y = deaths_per_million_7day_avg, color = location, group = location)) +
+grafico <- ggplot(datos_filtrados, aes(x = date, y = muertes_por_millon_7dias_media, color = location, group = location)) +
   geom_line(aes(size = location == 'Spain')) + scale_size_manual(values = c("TRUE" = 1, "FALSE" = 0.5)) + 
   scale_color_manual(values = c("United States" = "purple", "Italy" = "blue", "France" = "orange", 
                                 "Germany" = "green", "Canada" = "brown", "Japan" = "grey", 
@@ -51,9 +51,9 @@ plot <- ggplot(filtered_data, aes(x = date, y = deaths_per_million_7day_avg, col
         plot.caption = element_text(hjust = 0, vjust = 0, size = 12, face = "bold", color = "black"))
 
 #Modificamos la leyenda
-plot <- plot + guides(size = FALSE)
+grafico <- grafico + guides(size = FALSE)
 
-ggplotly(plot)
+ggplotly(grafico)
 
 #Guardamos el gráfico en PDF
 ggsave("GraficoTema3.pdf", plot = plot, width = 16, height = 8, dpi = 1000)
