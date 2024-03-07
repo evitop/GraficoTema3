@@ -1,3 +1,19 @@
+---
+title: "Covid"
+author: "Alexis Cavero Arocas, Eric Villaescusa Topper, Alberto Dalmau Garcia, Marcos Baudson Rios"
+date: "2024-03-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r}
+
 # Primero necesitamos cargar unas cuantas bibliotecas.
 library(dplyr)
 library(zoo)
@@ -50,3 +66,4 @@ ggsave("GraficoTema3.pdf", plot = grafico, width = 16, height = 8, dpi = 1000)
 
 # Y también lo guardamos en un archivo HTML.
 saveWidget(grafico_interactivo, file = "GraficoTema3.html")
+```
